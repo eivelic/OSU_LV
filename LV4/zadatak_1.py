@@ -13,7 +13,7 @@ df = pd.read_csv('data_C02_emission.csv')
 # a) Odaberite željene numeričke veličine specificiranjem liste s nazivima stupaca.
 # Podijelite podatke na skup za učenje i skup za testiranje u omjeru 80%-20%.
 
-numeric_columns = df.select_dtypes(include=['float64', 'int64']).columns
+numeric_columns = df.select_dtypes(include=['float64', 'int64']).columns.drop('CO2 Emissions (g/km)')
 print("Numerički stupci:", numeric_columns)
 
 X = df[numeric_columns]
@@ -109,7 +109,7 @@ print(f"Koeficijent determinacije R2 pokazuje koliko je varijacija u podacima ob
 # g) Što se događa s vrijednostima evaluacijskih metrika na testnom skupu kada mijenjate broj
 # ulaznih veličina?
 
-X_full = df[numeric_columns.drop('CO2 Emissions (g/km)')]
+X_full = df[numeric_columns]
 
 X_train_full, X_test_full, y_train, y_test = train_test_split(X_full, y, test_size=0.2, random_state=1)
 
