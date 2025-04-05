@@ -76,3 +76,64 @@ linearModel.fit(X_train_n, y_train)
 
 print("Koeficijenti modela:", linearModel.coef_)
 print("Presjek (intercept) modela:", linearModel.intercept_)
+
+# e) Izvršite procjenu izlazne veličine na temelju ulaznih veličina skupa za testiranje. Prikažite
+# pomoću dijagrama raspršenja odnos između stvarnih vrijednosti izlazne veličine i procjene
+# dobivene modelom.
+
+y_test_p = linearModel.predict(X_test_n)
+plt.scatter(y_test, y_test_p, color='violet')
+plt.xlabel("Stvarna vrijednost")
+plt.ylabel("Predviđena vrijednost")
+plt.title("Stvarne/predviđene vrijednosti CO2")
+plt.show()
+
+# f) Izvršite vrednovanje modela na način da izračunate vrijednosti regresijskih metrika na
+# skupu podataka za testiranje.
+
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score, mean_absolute_percentage_error
+import numpy as np
+
+mse = mean_squared_error(y_test, y_test_p)
+rmse = np.sqrt(mse)
+mae = mean_absolute_error(y_test, y_test_p)
+mape = mean_absolute_percentage_error(y_test, y_test_p)
+r2_determination = r2_score(y_test, y_test_p)
+
+print(f"Srednja kvadratna pogreška (engl. mean squared error - MSE): {mse}")
+print(f"Korijen iz srednje kvadratne pogreške (engl. root mean squared error - RMSE): {rmse}")
+print(f"Srednja apsolutna pogreška (engl. mean absolute error - MAE): {mae}")
+print(f"Srednja apsolutna postotna pogreška (engl. mean absolute percentage error - MAPE): {mape}")
+print(f"Koeficijent determinacije R2 pokazuje koliko je varijacija u podacima obuhvaćeno modelom: {r2_determination}")
+
+# g) Što se događa s vrijednostima evaluacijskih metrika na testnom skupu kada mijenjate broj
+# ulaznih veličina?
+
+X_full = df[numeric_columns.drop('CO2 Emissions (g/km)')]
+
+X_train_full, X_test_full, y_train, y_test = train_test_split(X_full, y, test_size=0.2, random_state=1)
+
+sc_full = StandardScaler()
+X_train_full_n = sc_full.fit_transform(X_train_full)
+X_test_full_n = sc_full.transform(X_test_full)
+
+linearModel_full = lm.LinearRegression()
+linearModel_full.fit(X_train_full_n, y_train)
+
+y_test_full_p = linearModel_full.predict(X_test_full_n)
+
+mse_full = mean_squared_error(y_test, y_test_full_p)
+rmse_full = np.sqrt(mse_full)
+mae_full = mean_absolute_error(y_test, y_test_full_p)
+mape_full = mean_absolute_percentage_error(y_test, y_test_full_p)
+r2_full = r2_score(y_test, y_test_full_p)
+
+print("\nEvaluacija s više ulaznih značajki\n")
+print(f"MSE: {mse_full}")
+print(f"RMSE: {rmse_full}")
+print(f"MAE: {mae_full}")
+print(f"MAPE: {mape_full}")
+print(f"R²: {r2_full}")
+
+# Kada povećamo broj ulaznih značajki, regresijski model dobiva više informacija i bolje može naučiti odnose između ulaza i ciljne vrijednosti. 
+# To često dovodi do poboljšanja regresijskih metrika (niži MSE, RMSE, MAE, MAPE i viši R²).
