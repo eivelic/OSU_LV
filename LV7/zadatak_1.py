@@ -39,7 +39,7 @@ def generate_data(n_samples, flagc):
     return X
 
 # generiranje podatkovnih primjera
-X = generate_data(500, 5)
+X = generate_data(500, 1)
 
 # prikazi primjere u obliku dijagrama rasprsenja
 plt.figure()
